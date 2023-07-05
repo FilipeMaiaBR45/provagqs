@@ -1,0 +1,16 @@
+<div class="container">
+  <table>
+    <tr>
+      <th>Id:</th>
+      <th>Raca:</th>
+      <th>Data Criacao:</th>
+    </tr>
+    {% for criacao in criacoes %}
+    <tr>
+      <td>{{ criacao.id }}</td>
+      <td>{{ criacao.raca }}</td>
+      <td>{{ criacao.data_criacao }}</td>
+    </tr>
+    {% endfor %}
+  </table>
+</div>
