@@ -1,34 +1,25 @@
 from datetime import timezone
 from django.test import TestCase
+from datetime import date, timedelta
 
 from Producao.models import Coleta, Criacao
+from Producao.forms import ColetaForm
 
 class ColetaFormTest(TestCase):
     @classmethod
     def setUpTestData(cls):
-     Criacao.objects.create(raca="Abelha africana", data_criacao="0000-00-00")
-     Coleta.objects.create(criacao="Abelha rainha", data="0000-00-00", quantidade=50)
+     criacao = Criacao.objects.create(raca="Abelha africana", data_criacao="2023-06-20")
+     Coleta.objects.create(criacao=criacao, data="2023-04-20", quantidade=50)
 
-    def test_validacao_data_coleta_create(self):
-        data_passada = timezone.now().date() - timezone.timedelta(days=1)
-        data_futura = timezone.now().date() + timezone.timedelta(days=1)
+    def test_validacao_data_coleta_ok(self):
+        form = ColetaForm(data={'criacao': 1, 'data': '2023-06-28', 'quantidade': 100})
+        self.assertTrue(form.is_valid())
 
-        form_data_passada = {'criacao': 'Abelha rainha', 'data_coleta': data_passada, 'quantidade': 50}
-        form_data_futura = {'criacao': 'Abelha rainha', 'data_coleta': data_futura, 'quantidade': 50}
+    def test_validacao_data_coleta_not_ok(self):
+        form1 = ColetaForm(data={'criacao': 1, 'data': '2023-04-20', 'quantidade': 100})
+        self.assertFalse(form1.is_valid())
+        form2 = ColetaForm(data={'criacao': 1, 'data': '2030-04-20', 'quantidade': 100})
+        self.assertFalse(form2.is_valid())
 
-        form_passada = ColetaForm(data=form_data_passada)
-        form_futura = ColetaForm(data=form_data_futura)
 
-        self.assertTrue(form_passada.is_valid())
-        self.assertFalse(form_futura.is_valid())
-
-    def test_validacao_data_coleta_(self):
-        coleta = Coleta.objects.create(criacao='Abelha rainha', data_coleta=timezone.now().date(), quantidade=50)
-        form_data_passada = {'criacao': 'Abelha rainha', 'data_coleta': coleta.data_coleta - timezone.timedelta(days=1), 'quantidade': 50}
-        form_data_futura = {'criacao': 'Abelha rainha', 'data_coleta': coleta.data_coleta + timezone.timedelta(days=1), 'quantidade': 50}
-
-        form_passada = ColetaForm(data=form_data_passada)
-        form_futura = ColetaForm(data=form_data_futura)
-
-        self.assertTrue(form_passada.is_valid())
-        self.assertFalse(form_futura.is_valid())
+    

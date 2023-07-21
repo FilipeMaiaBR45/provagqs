@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block subtitulo %} Detalhes produto {{produto}}
+{% endblock %}
+
+{% block conteudo %}
+
+<p id="id_criacao"><strong>Raça: </strong> {{coleta.criacao.raca}}</p>
+<p id="id_data"><strong>Data de cadastro: </strong> {{coleta.data}}</p>
+<p id="id_quantidade">
+  <strong>Quantidade em estoque </strong> {{coleta.quantidade}}
+</p>
+
+{% endblock %} {% block rodape %} Nosso sistema de compras online {% endblock %}

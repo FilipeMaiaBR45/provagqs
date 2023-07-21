@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block subtitulo %} Listar coletas {% endblock %} {% block conteudo %}
+
+<strong>{{lista_produtos|length}} coletas</strong>
+{% for coleta in lista_produtos %}
+<p id="id_{{coleta.criacao}}_{{coleta.data}}">
+  {{coleta.id}} 
+  <a
+    id="id_button_{{coleta.pk}}"
+    class="btn btn-success"
+    href="{% url 'producao:detalhes_coleta' pk=coleta.pk %}"
+    >Detalhes</a
+  >
+</p>
+{% endfor %} {% endblock %} {% block rodape %} Nosso sistema de cadastro online
+{% endblock %}

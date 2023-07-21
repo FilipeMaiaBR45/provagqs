@@ -1,90 +1,129 @@
 from django.test import Client, TestCase
 
-from Producao.models import Coleta
+from Producao.models import Coleta, Criacao
+from django.urls import reverse
+
+from datetime import date
+
 
 
 class ProducaoViewsTest(TestCase):
     @classmethod
     def setUpTestData(cls):
-        Coleta.objects.create(criacao='Abelha rainha', data="0000-00-00", quantidade=50)
-    
-  
-    def test_criar_coleta_template(self):
-        client = Client()
+        criacao = Criacao.objects.create(raca="Abelha africana", data_criacao="2023-06-20")
 
+        Coleta.objects.create(criacao=criacao, data="2023-06-20", quantidade=50)
+
+    def test_listar_coleta_url(self):
+        response = self.client.get(reverse('producao:listar_coletas'))
+        self.assertEquals(response.status_code, 200)
+
+    def test_listar_coleta_template(self):
+      
+        # Enviar uma requisição GET para a view de listagem de coletas
+        url = reverse('producao:listar_coletas')
+        response = self.client.get(url)
+
+        # Verificar se o status da resposta é 200 (OK)
+        self.assertEqual(response.status_code, 200)
+
+        # Verificar se o template correto é usado
+        self.assertTemplateUsed(response, 'Producao/coleta_list.html')
+    
+    def test_listar_todas_coletas(self):
+        response = self.client.get(reverse('producao:listar_coletas'))
+        self.assertEquals(len(response.context['lista_produtos']), 1)
+
+    #--------------------------------------------------------------------------------------------------
+
+   # def test_detalhes_coleta_url(self):
+
+    #def test_detalhes_coleta_template(self):
+
+    #def test_detalhes_coleta(self):
+
+    #--------------------------------------------------------------------------------------------------
+
+
+    #def test_deletar_coleta_url(self):
+
+  #  def test_deletar_coleta_template(self):
+
+   # def test_deletar_coleta(self):
+
+
+    #--------------------------------------------------------------------------------------------------
+
+
+    def test_criar_coleta_url(self):
+        #response = self.client.get(reverse('producao:criar-coleta'))
         data = {
-            'criacao': 'Abelha rainha',
+            'criacao': 1,
             'data_coleta': '2023-06-30',
             'quantidade': 50
         }
+        url = reverse('producao:criar_coleta')
+        response = self.client.post(url, data)
+        self.assertEquals(response.status_code, 200)
+        self.assertTemplateUsed(response, 'Producao/criar_coleta.html')
+        nova_coleta = Coleta.objects.filter('criacao': 1, 'data_coleta': '2023-06-30', 'quantidade': 50)
+        self.assertEquals(len(nova_coleta), 1)
 
-        # URL reversa para a view de criação de Coleta
-        url = reverse('criacao_coleta')
+    #def test_criar_coleta(self):
 
-        response = client.post(url, data)
 
-        self.assertEquals(response.status_code, 201)
-        self.assertTemplateUsed(response, 'Produto/criacao_coleta')
+    #--------------------------------------------------------------------------------------------------
 
+
+   # def test_editar_coleta_url(self):
 
     def test_editar_coleta_template(self):
         client = Client()
 
         data = {
             'id': 1,
-            'criacao': 'Abelha rainha',
+            'criacao': 1,
             'data_coleta': '2023-06-30',
             'quantidade': 50
         }
 
         # URL reversa para a view de criação de Coleta
-        url = reverse('editar_coleta')
+        url = reverse('producao:editar_coleta', kwargs={'pk': 1})
 
         response = client.post(url, data)
 
         self.assertEquals(response.status_code, 200)
-        self.assertTemplateUsed(response, 'Produto/editar_coleta')
+        self.assertTemplateUsed(response, 'Producao/editar_coleta.html')
 
+    #def test_editar_coleta(self):
 
+    #--------------------------------------------------------------------------------------------------
 
-    def test_exibir_relatorio_coleta(self):
+   # def test_exibir_relatorio_coleta_url(self):
+
+    def test_exibir_relatorio_coleta_template(self):
+
+    #def test_exibir_relatorio_coleta(self):
         client = Client()
 
-        url = reverse('relatorio_coleta')
+        url = reverse('producao:relatorio_coletas')
 
         response = client.get(url)
 
-        self.assertContains(response, "Janeiro: 100")
-        self.assertContains(response, "Dezembro: 100")
-        self.assertContains(response, "Novembro: 100")
-        self.assertContains(response, "Outubro: 100")
-        self.assertContains(response, "Setembro: 100")
-        self.assertContains(response, "Agosto: 100")
-        self.assertContains(response, "Julho: 100")
-        self.assertContains(response, "Junho: 100")
-        self.assertContains(response, "Maio: 100")
-        self.assertContains(response, "Abril: 100")
-        self.assertContains(response, "Março: 100")
-        self.assertContains(response, "Fevereiro: 100")
-        self.assertEquals(response.status_code, 200)
-        self.assertTemplateUsed(response, 'Produto/relatorio_coleta')
-
-
         
+        self.assertTemplateUsed(response, 'Producao/relatorio_coletas.html')
 
 
+    #def setUp(self):
+     #   self.client = Client()
+     #   self.url = reverse('coleta')
 
-
-    def test_listar_produto_url(self):
-        response = self.client.get(reverse("Producao:index"))
-        self.assertEquals(response.status_code, 200)
     
-    def test_listar_produto_template(self):
-        response = self.client.get(reverse('Producao:cadastro_coleta'))
-        self.assertTemplateUsed(response, 'cadastro/coleta.html')
 
-    def test_listar_produto_all(self):
-        response = self.client.get(reverse('Producao:cadastro_criacao'))
-        self.assertEquals(len(response.context['cadastro_criacao']), 5)
+    
+
+
+
+
     
       

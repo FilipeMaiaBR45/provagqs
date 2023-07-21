@@ -1,0 +1,6 @@
+<h1>Confirmar Deleção</h1>
+<p>Tem certeza de que deseja deletar a coleta com ID {{ coleta.id }}?</p>
+<form method="post" action="{% url 'deletar_coleta' coleta.id %}">
+  {% csrf_token %}
+  <button type="submit">Confirmar Deleção</button>
+</form>

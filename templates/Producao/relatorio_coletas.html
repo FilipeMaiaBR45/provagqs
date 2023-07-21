@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Relatório de Coleta</title>
+    <style>
+      table {
+        border-collapse: collapse;
+        width: 100%;
+      }
+      th,
+      td {
+        padding: 8px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+      }
+      th {
+        background-color: #f2f2f2;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Relatório de Coleta</h1>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Mês</th>
+          <th>Quantidade Coletada</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for mes_coleta in meses_coletas %}
+        <tr>
+          <td>{{ mes_coleta.mes_coleta|date:"F Y" }}</td>
+          <td>{{ mes_coleta.soma_quantidade }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </body>
+</html>
